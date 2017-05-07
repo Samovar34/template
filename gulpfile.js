@@ -1,3 +1,6 @@
+const path = require("path");
+const fs   = require("fs");
+
 const gulp  = require("gulp"),
       pug   = require("gulp-pug"),
       scss  = require("gulp-sass"),
@@ -74,6 +77,49 @@ gulp.task("server", (done) => {
 
 gulp.task("build", ["build:view", "build:style", "build:js", "build:img", "build:fonts"], (done) => {
     done();
+});
+
+gulp.task("make:fs",(done) => {
+    // define file system
+    let project = require("./define.fs.json");
+
+    //get object with folder name and inner folder names
+    let srcRootFolder = project.srcFolders;
+
+    // create root folder
+    fs.mkdir(path.normalize(srcRootFolder.root), function (e, msg) {
+        if (e) {
+            console.error(`ERROR ${e.message}`);
+            if (e.code != "EEXIST") {
+                done();
+                return;
+            }
+        } else {
+            console.log(`OK! ${path.normalize(srcRootFolder.root)} created`);
+        }
+
+        // create inner folders
+        srcRootFolder.inners.forEach(function (value, index, array) {
+            let curPath = path.join(srcRootFolder.root, value);
+            fs.mkdir(curPath, doAfterMkdir(curPath, index, array, done));
+        });
+    });
+
+    function doAfterMkdir(msg, index, arr, cl) {
+        return function (e) {
+            if (e) {
+                console.error(`ERROR ${e.message}`);
+                if (index === (arr.length - 1)) {
+                    cl();
+                }
+                return;
+            }
+            console.log(`OK! ${msg} created`);         
+            if (index === (arr.length - 1)) {
+                cl();
+            }
+        }
+    }
 });
 
 gulp.task("watch", (done) => {

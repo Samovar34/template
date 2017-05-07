@@ -5,6 +5,7 @@
   "main": "gulpfile.js",
   "scripts": {
     "start": "gulp",
+    "make:fs": "gulp make:fs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "unscript",
