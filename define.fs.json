@@ -1,6 +1,6 @@
 {
     "srcFolders": {
         "root": "src",
-        "inners": ["view", "style", "js", "fonts", "img"]
+        "inners": ["view", "style", "js", "scripts","fonts", "img"]
     }
 }
